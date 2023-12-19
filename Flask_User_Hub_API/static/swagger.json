@@ -1,0 +1,384 @@
+{
+  "swagger": "2.0",
+  "info": {
+      "title": "User API",
+      "description": "API for your application",
+      "version": "1.0"
+  },
+  "basePath": "/",
+  "paths": {
+      "/register": {
+          "post": {
+              "summary": "User registration endpoint",
+              "description": "Endpoint for registering a new user",
+              "tags": [
+                  "User"
+              ],
+              "parameters": [
+                  {
+                      "name": "body",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "name": {
+                                  "type": "string"
+                              },
+                              "email": {
+                                  "type": "string"
+                              },
+                              "password": {
+                                  "type": "string"
+                              }
+                          }
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Registration successful"
+                  },
+                  "400": {
+                      "description": "Email already registered"
+                  }
+              }
+          }
+      },
+      "/login": {
+          "post": {
+              "summary": "User login endpoint",
+              "description": "Endpoint for user authentication",
+              "tags": [
+                  "User"
+              ],
+              "parameters": [
+                  {
+                      "name": "body",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "email": {
+                                  "type": "string"
+                              },
+                              "password": {
+                                  "type": "string"
+                              }
+                          }
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Login successful",
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "message": {
+                                  "type": "string",
+                                  "example": "Login successful"
+                              },
+                              "token": {
+                                  "type": "string",
+                                  "example": "your_generated_jwt_token_here"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Invalid credentials"
+                  }
+              }
+          }
+      },
+      "/user/{user_id}": {
+          "get": {
+              "summary": "User profile view endpoint",
+              "description": "Endpoint to retrieve user profile information",
+              "tags": [
+                  "User"
+              ],
+              "parameters": [
+                  {
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true,
+                      "type": "integer"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "User profile data",
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "user_id": {
+                                  "type": "integer"
+                              },
+                              "name": {
+                                  "type": "string"
+                              },
+                              "email": {
+                                  "type": "string"
+                              },
+                              "password": {
+                                  "type": "string"
+                              },
+                              "isPaid": {
+                                  "type": "boolean"
+                              },
+                              "TrialsLeft": {
+                                  "type": "integer"
+                              },
+                              "createdAt": {
+                                  "type": "string",
+                                  "format": "date-time"
+                              },
+                              "updatedAt": {
+                                  "type": "string",
+                                  "format": "date-time"
+                              }
+                          }
+                      }
+                  },
+                  "401": {
+                      "description": "Authorization token is missing or invalid"
+                  },
+                  "403": {
+                      "description": "Access denied"
+                  },
+                  "404": {
+                      "description": "User not found"
+                  }
+              },
+              "security": [
+                  {
+                      "jwt": []
+                  }
+              ]
+          }
+      },
+      "/updateuser/{user_id}": {
+          "put": {
+              "summary": "Update user profile endpoint",
+              "description": "Endpoint to update user profile information",
+              "tags": [
+                  "User"
+              ],
+              "parameters": [
+                  {
+                      "name": "user_id",
+                      "in": "path",
+                      "required": true,
+                      "type": "integer"
+                  },
+                  {
+                      "name": "body",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "name": {
+                                  "type": "string"
+                              }
+                          }
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Profile updated successfully"
+                  },
+                  "401": {
+                      "description": "Authorization token is missing or invalid"
+                  },
+                  "403": {
+                      "description": "Access denied"
+                  },
+                  "404": {
+                      "description": "User not found"
+                  }
+              },
+              "security": [
+                  {
+                      "jwt": []
+                  }
+              ]
+          }
+      },
+      "/forgot_password": {
+          "post": {
+              "summary": "Forgot password endpoint",
+              "description": "Endpoint to handle password reset requests",
+              "tags": [
+                  "User"
+              ],
+              "parameters": [
+                  {
+                      "name": "body",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "email": {
+                                  "type": "string"
+                              }
+                          }
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Password reset email sent. Check your inbox.",
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "message": {
+                                  "type": "string"
+                              },
+                              "reset_url": {
+                                  "type": "string"
+                              }
+                          }
+                      }
+                  },
+                  "404": {
+                      "description": "User not found"
+                  }
+              }
+          }
+      },
+      "/change_password": {
+          "post": {
+              "summary": "Change password endpoint",
+              "description": "Endpoint to change user password using a token",
+              "tags": [
+                  "User"
+              ],
+              "parameters": [
+                  {
+                      "name": "body",
+                      "in": "body",
+                      "required": true,
+                      "schema": {
+                          "type": "object",
+                          "properties": {
+                              "token": {
+                                  "type": "string"
+                              },
+                              "new_password": {
+                                  "type": "string"
+                              }
+                          }
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "Password updated successfully"
+                  },
+                  "400": {
+                      "description": "Invalid token"
+                  },
+                  "404": {
+                      "description": "User not found"
+                  }
+              }
+          }
+      }
+  },
+  "securityDefinitions": {
+      
+      "jwt": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"
+      }
+  },
+  "servers": [
+      {
+          "url": "/"
+      }
+  ],
+  "components": {
+      "securitySchemes": {
+          "jwt": {
+              "type": "apiKey",
+              "scheme": "bearer",
+              "bearerFormat": "JWT",
+              "x-bearerInfoFunc": "app.decode_token"
+          }
+      },
+      "schemas": {}
+  },
+  "definitions": {
+      "User": {
+          "type": "object",
+          "properties": {
+              "id": {
+                  "type": "integer",
+                  "format": "int32"
+              },
+              "name": {
+                  "type": "string"
+              },
+              "email": {
+                  "type": "string"
+              },
+              "password": {
+                  "type": "string"
+              },
+              "username": {
+                  "type": "string"
+              },
+              "isPaid": {
+                  "type": "boolean"
+              },
+              "TrialsLeft": {
+                  "type": "integer"
+              },
+              "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+              },
+              "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+              }
+          },
+          "required": [
+              "name",
+              "email",
+              "password"
+          ]
+      },
+      "UserToken": {
+          "type": "object",
+          "properties": {
+              "id": {
+                  "type": "integer",
+                  "format": "int32"
+              },
+              "user_id": {
+                  "type": "integer"
+              },
+              "token": {
+                  "type": "string",
+                  "maxLength": 100
+              },
+              "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+              }
+          },
+          "required": [
+              "user_id",
+              "token"
+          ]
+      }
+  }
+}
